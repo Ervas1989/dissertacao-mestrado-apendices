@@ -20,16 +20,16 @@ Este repositório reúne as versões integrais dos apêndices da dissertação, 
 | C | Tabela de correspondência e matriz de cruzamento | [Apendice_C_Tabela_de_Correspondencia_e_Matriz_de_Cruzamento.pdf](Apendice_C_Tabela_de_Correspondencia_e_Matriz_de_Cruzamento.pdf) |
 | D | Análise comparativa estrutural: gráficos aluviais e boxplots | [Apendice_D_Analise_Estrutural_Aluviais_e_Boxplots.pdf](Apendice_D_Analise_Estrutural_Aluviais_e_Boxplots.pdf) |
 | E | Análise estatística inferencial: as 41 hipóteses nulas (H0.1–H0.41) e os resultados dos testes | [Apendice_E_Analise_Estatistica_Inferencial_H0.1_H0.41.pdf](Apendice_E_Analise_Estatistica_Inferencial_H0.1_H0.41.pdf) |
-| F | Base de dados do inquérito (Excel): respostas, dados brutos, tabelas de cobertura e de correspondência, matriz de cruzamento e matriz de Spearman | [Apendice_F_Estudo_Matriz_Corrigida.xlsx](Apendice_F_Estudo_Matriz_Corrigida.xlsx) |
+| F | Base de dados do inquérito (Excel): respostas, dados brutos, tabelas de cobertura e de correspondência, escolhas múltiplas opção a opção, matriz de cruzamento, matriz de Spearman e robustez dos resultados | [Apendice_F_Estudo_Matriz_Corrigida.xlsx](Apendice_F_Estudo_Matriz_Corrigida.xlsx) |
 | G | Composição das medidas da matriz de cruzamento, por inquirido | [Apendice_G_Matriz_de_Cruzamento_por_Inquirido.pdf](Apendice_G_Matriz_de_Cruzamento_por_Inquirido.pdf) |
 
 ## Reprodução da análise
 
 | Ficheiro | Conteúdo |
 |---|---|
-| [Script_R_Estudo_Matriz_Corrigida.R](Script_R_Estudo_Matriz_Corrigida.R) | Script R que reproduz, passo a passo, a matriz de cruzamento, os dados dos gráficos aluviais, os boxplots e todos os testes |
+| [Script_R_Estudo_Matriz_Corrigida.R](Script_R_Estudo_Matriz_Corrigida.R) | Script R que reproduz, passo a passo, a matriz de cruzamento, os dados dos gráficos aluviais, os boxplots, todos os testes e as análises de robustez (passo 14) |
 | [dados_brutos.csv](dados_brutos.csv) | Dados de entrada do script (67 inquiridos × 36 colunas); idêntico à folha «Dados brutos (R)» do Apêndice F |
-| [Guia_Detalhado_Script_R_Passo_a_Passo.pdf](Guia_Detalhado_Script_R_Passo_a_Passo.pdf) | Guia que explica cada comando do script, os resultados obtidos e a sua leitura (Passos 0 a 13) |
+| [Guia_Detalhado_Script_R_Passo_a_Passo.pdf](Guia_Detalhado_Script_R_Passo_a_Passo.pdf) | Guia que explica cada comando do script, os resultados obtidos e a sua leitura (Passos 0 a 14) |
 
 Para reproduzir os resultados: colocar `Script_R_Estudo_Matriz_Corrigida.R` e `dados_brutos.csv` na mesma pasta, definir essa pasta como diretório de trabalho no R e executar o script. O guia indica, para cada passo, os valores que devem ser obtidos.
 
@@ -39,6 +39,7 @@ Para reproduzir os resultados: colocar `Script_R_Estudo_Matriz_Corrigida.R` e `d
 - Na base de dados (Apêndice F) e no ficheiro `dados_brutos.csv`, os inquiridos estão identificados apenas por número (1 a 67). A participação foi anónima e os dados são tratados de forma agregada, em conformidade com o RGPD.
 - A análise estatística foi feita no R 4.6.1 (R Core Team, 2026), com nível de significância α = 0,05 e correção de Benjamini-Hochberg dentro de cada bloco de testes.
 - A versão atual (v2.0) corresponde à dissertação com a **matriz de cruzamento corrigida**: cada pergunta entra numa só medida, as perguntas de caracterização (1.1–1.4) servem apenas como variáveis de grupo e as respostas são reescaladas para 1–5. As versões anteriores (v1.0 e v1.1) continuam disponíveis em *Releases*, apenas para registo.
+- Atualização de 7 de novembro de 2026: acrescentadas a folha «Escolhas múltiplas (detalhe)» e a folha «Robustez» ao Apêndice F, a secção E.10 ao Apêndice E e o Passo 14 ao script R e ao guia (tamanho do efeito, intervalos de confiança, poder e repetição do Bloco 4 por região). Nenhum resultado das 41 hipóteses mudou.
 
 ## Como citar
 

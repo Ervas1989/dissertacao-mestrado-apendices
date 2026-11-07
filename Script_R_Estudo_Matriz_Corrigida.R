@@ -321,4 +321,75 @@ for (m in motivacoes) for (ind in c("IndEco", "IndSoc", "IndAmbEC")) {
   t <- cor.test(r[[m]], matriz[[ind]], method = "spearman", exact = FALSE)
   cat(sprintf("%-8s x %-9s rho = %6.3f   p = %.4f\n", m, ind, t$estimate, t$p.value))
 }
+
+# ---- PASSO 14. Robustez dos resultados --------------------------------------
+# Não altera nenhum resultado anterior: acrescenta a margem de erro, o poder,
+# os tamanhos do efeito, os intervalos de confiança das correlações e a
+# repetição do Bloco 4 separadamente nos Açores e nas restantes regiões.
+
+# (a) Margem de erro máxima de uma proporção (95% de confiança; p = 0,5)
+n <- nrow(matriz)
+round(100 * qnorm(0.975) * sqrt(0.25 / n), 1)          # em pontos percentuais
+
+# (b) Poder: menor |rho| detetável com 80% de poder (alfa = 0,05; bilateral)
+rho_min <- function(n) tanh((qnorm(0.975) + qnorm(0.80)) / sqrt(n - 3))
+round(c(todos = rho_min(67), IndAmbEC = rho_min(64), Acores = rho_min(38), outras = rho_min(29)), 3)
+
+# (c) Tamanho do efeito de cada hipótese
+#     Bloco 1: V de Cramér corrigido; Bloco 2: épsilon-quadrado (H / (n - 1)) e, na H0.23, r = |z| / raiz(n);
+#     Bloco 3: eta-quadrado parcial do efeito com menor p; Bloco 4: o próprio rho.
+#     No Bloco 1 usa-se o V de Cramér com a correção de enviesamento de Bergsma (2013),
+#     porque o V simples sobrestima o efeito em tabelas grandes com poucos inquiridos.
+v_cramer <- function(a, b) {
+  t <- table(matriz[[a]], matriz[[b]]); n <- sum(t); r <- nrow(t); k <- ncol(t)
+  phi2 <- unname(suppressWarnings(chisq.test(t, correct = FALSE))$statistic) / n
+  phi2c <- max(0, phi2 - (k - 1) * (r - 1) / (n - 1))
+  rc <- r - (r - 1)^2 / (n - 1); kc <- k - (k - 1)^2 / (n - 1)
+  sqrt(phi2c / min(kc - 1, rc - 1))
+}
+pares1 <- list(c("regiao", "trab"), c("tipo", "trab"), c("regiao", "tipo"), c("regiao", "area"),
+               c("tipo", "area"), c("area", "trab"), c("regiao", "maodeobra"))
+ef1 <- sapply(pares1, function(v) v_cramer(v[1], v[2]))
+medida2 <- c("Obj2", "Obj4", "Obj1", "IndEco", "IndSoc", "IndAmbEC", "Obj2", "IndSoc", "IndEco",
+             "Obj1", "Obj2", "IndEco", "IndAmbEC", "Obj1", "Obj6", "IndEco", "IndSoc")
+testes2 <- list(H0.8, H0.9, H0.10, H0.11, H0.12, H0.13, H0.14, H0.15, H0.16, H0.17,
+                H0.18, H0.19, H0.20, H0.21, H0.22, H0.23, H0.24)
+ef2 <- mapply(function(t, m) {
+  n_m <- sum(!is.na(matriz[[m]]))
+  if (grepl("Kruskal", t$method)) unname(t$statistic) / (n_m - 1)
+  else abs(qnorm(t$p.value / 2)) / sqrt(n_m)             # H0.23 (Mann-Whitney): r
+}, testes2, medida2)
+ef3 <- sapply(list(H0.25, H0.26, H0.27, H0.28, H0.29, H0.30), function(t) {
+  k <- which.min(t$p); t$F[k] * t$gl[k] / (t$F[k] * t$gl[k] + t$gl_res[k])
+})
+efeito <- data.frame(H0 = paste0("H0.", 1:41),
+                     medida = rep(c("V de Cramér corrigido", "épsilon²", "eta² parcial", "rho"), c(7, 17, 6, 11)),
+                     valor = round(c(ef1, ef2, ef3, rho), 3))
+efeito$medida[23] <- "r"                                 # H0.23 é um Mann-Whitney
+efeito
+
+# (d) Intervalo de confiança a 95% de cada rho do Bloco 4 (bootstrap, 10 000 reamostragens)
+pares4 <- list(c("Obj1", "IndEco"), c("Obj2", "IndEco"), c("Obj3", "IndEco"), c("Obj4", "IndAmbEC"),
+               c("Obj5", "IndSoc"), c("Obj6", "IndEco"), c("IndEco", "IndSoc"), c("IndSoc", "IndAmbEC"),
+               c("IndEco", "IndAmbEC"), c("Obj1", "Obj2"), c("Obj4", "IndSoc"))
+set.seed(2026)
+ic <- t(sapply(pares4, function(v) {
+  d <- na.omit(matriz[v])
+  b <- replicate(10000, { i <- sample(nrow(d), replace = TRUE); cor(d[i, 1], d[i, 2], method = "spearman") })
+  quantile(b, c(0.025, 0.975), na.rm = TRUE)
+}))
+# (e) Bloco 4 repetido nos Açores e nas restantes regiões
+por_regiao <- function(dados) t(sapply(pares4, function(v) {
+  t <- cor.test(dados[[v[1]]], dados[[v[2]]], method = "spearman", exact = FALSE)
+  c(n = sum(complete.cases(dados[v])), rho = unname(t$estimate), p = t$p.value)
+}))
+acores <- por_regiao(matriz[matriz$regiao == "Açores", ])
+outras <- por_regiao(matriz[matriz$regiao != "Açores", ])
+robustez <- data.frame(H0 = paste0("H0.", 31:41), rho = round(rho, 3),
+                       IC95_inf = round(ic[, 1], 3), IC95_sup = round(ic[, 2], 3),
+                       n_Acores = acores[, "n"], rho_Acores = round(acores[, "rho"], 3), p_Acores = round(acores[, "p"], 4),
+                       n_outras = outras[, "n"], rho_outras = round(outras[, "rho"], 3), p_outras = round(outras[, "p"], 4))
+robustez
+write.csv(efeito, "tamanhos_do_efeito.csv", row.names = FALSE, fileEncoding = "UTF-8")
+write.csv(robustez, "robustez_bloco4.csv", row.names = FALSE, fileEncoding = "UTF-8")
 # =============================== FIM =========================================
