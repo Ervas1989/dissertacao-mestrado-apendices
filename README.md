@@ -20,7 +20,7 @@ Este repositório reúne as versões integrais dos apêndices da dissertação, 
 | C | Tabela de correspondência e matriz de cruzamento | [Apendice_C_Tabela_de_Correspondencia_e_Matriz_de_Cruzamento.pdf](Apendice_C_Tabela_de_Correspondencia_e_Matriz_de_Cruzamento.pdf) |
 | D | Análise comparativa estrutural: gráficos aluviais e boxplots | [Apendice_D_Analise_Estrutural_Aluviais_e_Boxplots.pdf](Apendice_D_Analise_Estrutural_Aluviais_e_Boxplots.pdf) |
 | E | Análise estatística inferencial: as 41 hipóteses nulas (H0.1–H0.41) e os resultados dos testes | [Apendice_E_Analise_Estatistica_Inferencial_H0.1_H0.41.pdf](Apendice_E_Analise_Estatistica_Inferencial_H0.1_H0.41.pdf) |
-| F | Base de dados do inquérito (Excel): respostas, dados brutos, tabelas de cobertura e de correspondência, escolhas múltiplas opção a opção, matriz de cruzamento, matriz de Spearman e robustez dos resultados | [Apendice_F_Estudo_Matriz_Corrigida.xlsx](Apendice_F_Estudo_Matriz_Corrigida.xlsx) |
+| F | Base de dados do inquérito (Excel): respostas, dados brutos, tabela de cobertura (com a fonte de cada pergunta) e tabela de correspondência, cálculo detalhado das medidas (codificação, reescala, exemplos e fundamentação), escolhas múltiplas opção a opção, matriz de cruzamento, matriz de Spearman e robustez dos resultados | [Apendice_F_Estudo_Matriz_Corrigida.xlsx](Apendice_F_Estudo_Matriz_Corrigida.xlsx) |
 | G | Composição das medidas da matriz de cruzamento, por inquirido | [Apendice_G_Matriz_de_Cruzamento_por_Inquirido.pdf](Apendice_G_Matriz_de_Cruzamento_por_Inquirido.pdf) |
 
 ## Reprodução da análise
@@ -40,6 +40,7 @@ Para reproduzir os resultados: colocar `Script_R_Estudo_Matriz_Corrigida.R` e `d
 - A análise estatística foi feita no R 4.6.1 (R Core Team, 2026), com nível de significância α = 0,05 e correção de Benjamini-Hochberg dentro de cada bloco de testes.
 - A versão atual (v2.0) corresponde à dissertação com a **matriz de cruzamento corrigida**: cada pergunta entra numa só medida, as perguntas de caracterização (1.1–1.4) servem apenas como variáveis de grupo e as respostas são reescaladas para 1–5. As versões anteriores (v1.0 e v1.1) continuam disponíveis em *Releases*, apenas para registo.
 - Atualização de 7 de novembro de 2026: acrescentadas a folha «Escolhas múltiplas (detalhe)» e a folha «Robustez» ao Apêndice F, a secção E.10 ao Apêndice E e o Passo 14 ao script R e ao guia (tamanho do efeito, intervalos de confiança, poder e repetição do Bloco 4 por região). Nenhum resultado das 41 hipóteses mudou.
+- Atualização de 11 de novembro de 2026: acrescentada ao Apêndice F a folha «Cálculo detalhado das medidas», que mostra, pergunta a pergunta, a codificação, a reescala para 1–5, um exemplo para qualquer inquirido e a fundamentação de cada regra; a folha «Cobertura do Questionário» passou a indicar a fonte em que se baseou cada pergunta. Os Apêndices B e C e o guia remetem para estas folhas. Nenhum valor nem resultado mudou.
 
 ## Como citar
 
