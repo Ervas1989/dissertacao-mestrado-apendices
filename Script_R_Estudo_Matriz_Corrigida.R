@@ -35,7 +35,7 @@ names(respostas)         # nomes das colunas
 
 
 # ---- PASSO 2. Tabela de correspondência (corrigida) --------------------------
-# Cada objetivo e cada indicador passa a ter as SUAS perguntas, sem perguntas
+# Cada objetivo e cada índice passa a ter as SUAS perguntas, sem perguntas
 # repetidas entre colunas que se correlacionam (exceto 4.3, comum a Obj4 e IndEco,
 # que nunca são correlacionados entre si). As perguntas de caracterização
 # (1.1 a 2.2) ficam como variáveis de grupo, e não dentro das medidas; a 2.3 entra no Obj3.
@@ -58,19 +58,19 @@ codigo <- function(x, lista) match(trimws(x), lista)
 escala5 <- function(x, maximo) 1 + 4 * (x - 1) / (maximo - 1)
 
 r <- respostas            # cópia de trabalho
-# Indicador económico (Secção 4)
+# Índice económico (Secção 4)
 r$rend  <- escala5(codigo(r$p4_1, c("Diminuiu", "Manteve-se", "Aumentou ligeiramente", "Aumentou significativamente")), 4)
 r$preco <- escala5(codigo(r$p4_2, c("Não", "Depende do mercado", "Sim")), 3)
 r$merc  <- escala5(codigo(r$p4_3a, c("Discordo", "Neutro", "Concordo")), 3)
 r$rel   <- escala5(codigo(r$p4_3b, c("Discordo", "Neutro", "Concordo")), 3)
 r$proc  <- escala5(codigo(r$p4_3c, c("Discordo", "Neutro", "Concordo")), 3)
-# Indicador ambiental e ecológico (Secção 5): «Reduziu» é favorável nos pesticidas e fertilizantes
+# Índice ambiental (Secção 5): «Reduziu» é favorável nos pesticidas e fertilizantes
 r$pest  <- escala5(codigo(r$p5_1, c("Aumentou", "Igual", "Reduziu")), 3)
 r$fert  <- escala5(codigo(r$p5_2, c("Aumentou", "Igual", "Reduziu")), 3)
 r$agua  <- escala5(codigo(r$p5_3, c("Reduziu", "Igual", "Aumentou")), 3)
 r$solo  <- escala5(codigo(r$p5_4, c("Reduziu", "Igual", "Aumentou")), 3)
 r$bio   <- escala5(codigo(r$p5_5, c("Reduziu", "Igual", "Aumentou")), 3)
-# Indicador social (Secção 6): 6.2 = número de impactos positivos na comunidade (0, 1, 2 ou mais)
+# Índice social (Secção 6): 6.2 = número de impactos positivos na comunidade (0, 1, 2 ou mais)
 r$qv    <- escala5(codigo(r$p6_1, c("Não", "Parcialmente", "Sim")), 3)
 impactos <- strsplit(ifelse(is.na(r$p6_2), "", r$p6_2), ",")
 n_impactos <- sapply(impactos, function(v) sum(trimws(v) != "" & trimws(v) != "Sem impacto relevante"))
@@ -87,7 +87,7 @@ r$apoios    <- escala5(codigo(r$p7_2, c("Não", "Parcialmente", "Sim")), 3)
 
 
 # ---- PASSO 4. Construir a matriz de cruzamento ------------------------------
-# Regra: cada medida é a média dos seus itens (escala 1 a 5); um indicador com
+# Regra: cada medida é a média dos seus itens (escala 1 a 5); um índice com
 # vários itens só é calculado se pelo menos metade dos itens tiver resposta.
 media_itens <- function(itens, minimo) {
   m <- rowMeans(itens, na.rm = TRUE)
@@ -315,7 +315,7 @@ cor.test(matriz$antiguidade, r$qv, method = "spearman", exact = FALSE)
 # (c) H2 — número de obstáculos por forma de certificação (grupo vs individual)
 tapply(r$n_obstaculos, r$forma, mean)
 wilcox.test(r$n_obstaculos ~ r$forma, exact = FALSE)
-# (b) Motivações da Secção 3 e indicadores
+# (b) Motivações da Secção 3 e índices
 motivacoes <- c("m_rend", "m_merc", "m_prod", "m_amb", "m_cli", "m_apoio")
 for (m in motivacoes) for (ind in c("IndEco", "IndSoc", "IndAmbEC")) {
   t <- cor.test(r[[m]], matriz[[ind]], method = "spearman", exact = FALSE)
